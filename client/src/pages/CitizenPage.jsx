@@ -6,6 +6,7 @@ const MAX_MESSAGE_LENGTH = 500;
 export function CitizenPage({ user }) {
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [reference, setReference] = useState("");
   const [error, setError] = useState("");
 
   async function handleSubmit(event) {
@@ -16,7 +17,8 @@ export function CitizenPage({ user }) {
       return;
     }
     try {
-      await submitFeedback({ nric: user.nric, name: user.name, message });
+      const response = await submitFeedback({ nric: user.nric, name: user.name, message });
+      setReference(response.feedback.reference);
       setSubmitted(true);
       setMessage("");
     } catch (requestError) {
@@ -32,7 +34,11 @@ export function CitizenPage({ user }) {
         <p>Tell us about an issue, an idea, or a positive experience in your community.</p>
       </div>
       <section className="form-card">
-        {submitted && <div className="success-banner">Thank you. Your feedback has been received.</div>}
+        {submitted && (
+          <div className="success-banner">
+            Thank you. Your feedback has been received. Your submission reference is <strong>{reference}</strong>.
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <label>Your feedback
             <textarea
