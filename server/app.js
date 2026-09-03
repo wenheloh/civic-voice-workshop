@@ -35,7 +35,9 @@ export async function createApp(options = {}) {
 
   app.post("/api/feedback", async (req, res) => {
     const { nric, name, message } = req.body ?? {};
-    if (!message) return res.status(400).json({ error: "Please enter feedback." });
+    if (typeof message !== "string" || !message.trim()) {
+      return res.status(400).json({ error: "Please enter feedback." });
+    }
     const feedback = {
       id: crypto.randomUUID(),
       reference: `CV-${crypto.randomInt(100000, 1000000)}`,
