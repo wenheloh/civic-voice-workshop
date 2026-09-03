@@ -49,6 +49,9 @@ textarea { resize: vertical; line-height: 1.6; }
 .submission-confirmation { max-width: 520px; padding: 14px 0; }
 .submission-confirmation .muted { margin: 0 0 20px; }
 .admin-shell { max-width: 1050px; }
+.inbox-state { padding: 28px; border: 1px solid #e2dfd7; border-radius: 14px; background: white; color: #69747b; text-align: center; box-shadow: 0 8px 30px rgba(28,36,42,.04); }
+.inbox-error { color: #8f1b20; }
+.inbox-error p { margin-top: 0; }
 .inbox-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 20px; }
 .summary-card { min-width: 0; padding: 18px; border: 1px solid #e2dfd7; border-radius: 12px; background: white; box-shadow: 0 8px 30px rgba(28,36,42,.04); }
 .summary-card span { display: block; color: #69747b; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
