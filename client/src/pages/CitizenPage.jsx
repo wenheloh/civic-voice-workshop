@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { submitFeedback } from "../api";
 
 const MAX_MESSAGE_LENGTH = 500;
@@ -8,6 +8,18 @@ export function CitizenPage({ user }) {
   const [submitted, setSubmitted] = useState(false);
   const [reference, setReference] = useState("");
   const [error, setError] = useState("");
+  const [shouldFocusForm, setShouldFocusForm] = useState(false);
+  const confirmationRef = useRef(null);
+  const feedbackRef = useRef(null);
+
+  useEffect(() => {
+    if (submitted) {
+      confirmationRef.current?.focus();
+    } else if (shouldFocusForm) {
+      feedbackRef.current?.focus();
+      setShouldFocusForm(false);
+    }
+  }, [shouldFocusForm, submitted]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -33,6 +45,7 @@ export function CitizenPage({ user }) {
   function handleSubmitAnother() {
     setSubmitted(false);
     setError("");
+    setShouldFocusForm(true);
   }
 
   return (
@@ -44,7 +57,7 @@ export function CitizenPage({ user }) {
       </div>
       <section className="form-card">
         {submitted ? (
-          <div className="submission-confirmation">
+          <div className="submission-confirmation" ref={confirmationRef} tabIndex="-1" role="status" aria-live="polite">
             <div className="success-banner">
               Thank you. Your feedback has been received. Your submission reference is <strong>{reference}</strong>.
             </div>
@@ -53,24 +66,27 @@ export function CitizenPage({ user }) {
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
-            <label>Your feedback
-              <textarea
-                rows="7"
-                value={message}
-                maxLength={MAX_MESSAGE_LENGTH}
-                onChange={(event) => setMessage(event.target.value.slice(0, MAX_MESSAGE_LENGTH))}
-                placeholder="Share your feedback here..."
-                aria-describedby="feedback-character-count"
-              />
-            </label>
+            <label htmlFor="feedback-message">Your feedback</label>
+            <textarea
+              id="feedback-message"
+              ref={feedbackRef}
+              rows="7"
+              value={message}
+              maxLength={MAX_MESSAGE_LENGTH}
+              onChange={(event) => setMessage(event.target.value.slice(0, MAX_MESSAGE_LENGTH))}
+              placeholder="Share your feedback here..."
+              aria-describedby="feedback-character-count feedback-guidance"
+              aria-invalid={Boolean(error)}
+              aria-errormessage={error ? "feedback-error" : undefined}
+            />
             <p id="feedback-character-count" className="character-count" aria-live="polite">
               {message.length} / {MAX_MESSAGE_LENGTH} characters
             </p>
             <div className="form-footer">
-              <span className="muted">Please do not include sensitive personal information.</span>
-              <button className="primary-button">Submit feedback</button>
+              <span id="feedback-guidance" className="muted">Please do not include sensitive personal information.</span>
+              <button className="primary-button" type="submit">Submit feedback</button>
             </div>
-            {error && <p className="error-message">{error}</p>}
+            {error && <p id="feedback-error" className="error-message" role="alert">{error}</p>}
           </form>
         )}
       </section>
