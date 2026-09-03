@@ -1,4 +1,4 @@
-export function Header({ user, onLogout }) {
+export function Header({ user, onLogout, theme, onThemeToggle }) {
   return (
     <header className="site-header">
       <a className="brand" href="/">
@@ -7,6 +7,9 @@ export function Header({ user, onLogout }) {
       </a>
       <div className="header-actions">
         {user && <span className="signed-in">Signed in as {user.name}</span>}
+        <button className="theme-toggle" type="button" onClick={onThemeToggle} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}>
+          {theme === "light" ? "Dark mode" : "Light mode"}
+        </button>
         {user && <button className="text-button" onClick={onLogout}>Sign out</button>}
       </div>
     </header>
