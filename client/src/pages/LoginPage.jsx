@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { login } from "../api";
+import { isValidWorkshopNric, normalizeWorkshopNric } from "../lib/nric";
 
 export function LoginPage({ onLogin }) {
   const [role, setRole] = useState("citizen");
@@ -10,10 +11,16 @@ export function LoginPage({ onLogin }) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setBusy(true);
     setError("");
+    const normalizedNric = normalizeWorkshopNric(nric);
+    if (!isValidWorkshopNric(normalizedNric)) {
+      setError("Enter a valid NRIC-like ID, for example S0000001A.");
+      return;
+    }
+
+    setBusy(true);
     try {
-      const session = await login({ nric, password, role });
+      const session = await login({ nric: normalizedNric, password, role });
       onLogin(session);
     } catch (requestError) {
       setError(requestError.message);
@@ -44,12 +51,17 @@ export function LoginPage({ onLogin }) {
           </div>
           <form onSubmit={handleSubmit}>
             <label>NRIC
-              <input value={nric} onChange={(event) => setNric(event.target.value)} placeholder="e.g. S0000001A" />
+              <input
+                value={nric}
+                onChange={(event) => setNric(event.target.value)}
+                placeholder="e.g. S0000001A"
+                aria-describedby={error ? "login-error" : undefined}
+              />
             </label>
             <label>Password
               <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" />
             </label>
-            {error && <p className="error-message">{error}</p>}
+            {error && <p id="login-error" className="error-message" role="alert">{error}</p>}
             <button className="primary-button" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
           </form>
           <details className="demo-help">
