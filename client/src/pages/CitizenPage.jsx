@@ -6,6 +6,7 @@ const MAX_MESSAGE_LENGTH = 500;
 export function CitizenPage({ user }) {
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [reference, setReference] = useState("");
   const [error, setError] = useState("");
 
   async function handleSubmit(event) {
@@ -16,12 +17,18 @@ export function CitizenPage({ user }) {
       return;
     }
     try {
-      await submitFeedback({ nric: user.nric, name: user.name, message });
+      const response = await submitFeedback({ nric: user.nric, name: user.name, message });
+      setReference(response.feedback.reference);
       setSubmitted(true);
       setMessage("");
     } catch (requestError) {
       setError(requestError.message);
     }
+  }
+
+  function handleSubmitAnother() {
+    setSubmitted(false);
+    setError("");
   }
 
   return (
@@ -32,27 +39,36 @@ export function CitizenPage({ user }) {
         <p>Tell us about an issue, an idea, or a positive experience in your community.</p>
       </div>
       <section className="form-card">
-        {submitted && <div className="success-banner">Thank you. Your feedback has been received.</div>}
-        <form onSubmit={handleSubmit}>
-          <label>Your feedback
-            <textarea
-              rows="7"
-              value={message}
-              maxLength={MAX_MESSAGE_LENGTH}
-              onChange={(event) => setMessage(event.target.value.slice(0, MAX_MESSAGE_LENGTH))}
-              placeholder="Share your feedback here..."
-              aria-describedby="feedback-character-count"
-            />
-          </label>
-          <p id="feedback-character-count" className="character-count" aria-live="polite">
-            {message.length} / {MAX_MESSAGE_LENGTH} characters
-          </p>
-          <div className="form-footer">
-            <span className="muted">Please do not include sensitive personal information.</span>
-            <button className="primary-button">Submit feedback</button>
+        {submitted ? (
+          <div className="submission-confirmation">
+            <div className="success-banner">
+              Thank you. Your feedback has been received. Your submission reference is <strong>{reference}</strong>.
+            </div>
+            <p className="muted">Would you like to share another piece of feedback?</p>
+            <button className="primary-button" type="button" onClick={handleSubmitAnother}>Submit another</button>
           </div>
-          {error && <p className="error-message">{error}</p>}
-        </form>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <label>Your feedback
+              <textarea
+                rows="7"
+                value={message}
+                maxLength={MAX_MESSAGE_LENGTH}
+                onChange={(event) => setMessage(event.target.value.slice(0, MAX_MESSAGE_LENGTH))}
+                placeholder="Share your feedback here..."
+                aria-describedby="feedback-character-count"
+              />
+            </label>
+            <p id="feedback-character-count" className="character-count" aria-live="polite">
+              {message.length} / {MAX_MESSAGE_LENGTH} characters
+            </p>
+            <div className="form-footer">
+              <span className="muted">Please do not include sensitive personal information.</span>
+              <button className="primary-button">Submit feedback</button>
+            </div>
+            {error && <p className="error-message">{error}</p>}
+          </form>
+        )}
       </section>
     </main>
   );
