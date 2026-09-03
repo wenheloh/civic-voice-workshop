@@ -1,4 +1,5 @@
 :root { font-family: "DM Sans", system-ui, sans-serif; color: #17222b; background: #f7f5f0; font-synthesis: none; }
+:root[data-theme="dark"] { color: #edf2f5; background: #12181d; color-scheme: dark; }
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; }
 button, input, textarea { font: inherit; }
@@ -9,6 +10,7 @@ button { cursor: pointer; }
 .header-actions { display: flex; align-items: center; gap: 20px; font-size: 14px; }
 .signed-in, .muted { color: #69747b; }
 .text-button { border: 0; background: none; color: #b2252a; font-weight: 600; }
+.theme-toggle { border: 1px solid #d5d2cb; border-radius: 999px; background: transparent; color: inherit; padding: 7px 10px; font-size: 13px; font-weight: 700; }
 .split-layout { min-height: calc(100vh - 76px); display: grid; grid-template-columns: 1.08fr .92fr; }
 .intro-panel { background: #a91f25; color: white; padding: clamp(48px, 9vw, 136px) 9vw; position: relative; overflow: hidden; }
 .intro-panel::after { content: ""; position: absolute; width: 550px; height: 550px; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; right: -230px; bottom: -260px; box-shadow: 0 0 0 72px rgba(255,255,255,.05), 0 0 0 146px rgba(255,255,255,.04); }
@@ -62,6 +64,21 @@ textarea { resize: vertical; line-height: 1.6; }
 .feedback-row p { margin: 8px 0 0; line-height: 1.55; }
 .feedback-meta { color: #69747b; font-size: 13px; }
 .status-pill { align-self: flex-start; white-space: nowrap; background: #fff1df; color: #9a5b00; border-radius: 999px; padding: 5px 10px; font-size: 12px; font-weight: 700; }
+:root[data-theme="dark"] body { background: #12181d; }
+:root[data-theme="dark"] .site-header { border-color: #34404a; background: rgba(24, 32, 38, .94); }
+:root[data-theme="dark"] .brand { color: #edf2f5; }
+:root[data-theme="dark"] .signed-in, :root[data-theme="dark"] .muted, :root[data-theme="dark"] .feedback-meta, :root[data-theme="dark"] .page-heading p, :root[data-theme="dark"] .list-header span, :root[data-theme="dark"] .demo-help, :root[data-theme="dark"] .empty-state, :root[data-theme="dark"] .character-count { color: #b8c4cb; }
+:root[data-theme="dark"] .login-panel { background: #161e24; }
+:root[data-theme="dark"] .role-switch { background: #29343c; }
+:root[data-theme="dark"] .role-switch button { color: #c5d0d6; }
+:root[data-theme="dark"] .role-switch button.active { background: #34414a; color: #fff; box-shadow: none; }
+:root[data-theme="dark"] label { color: #dce5e9; }
+:root[data-theme="dark"] input, :root[data-theme="dark"] textarea { border-color: #4a5862; background: #202a31; color: #edf2f5; }
+:root[data-theme="dark"] .theme-toggle { border-color: #53616b; }
+:root[data-theme="dark"] .form-card, :root[data-theme="dark"] .feedback-list, :root[data-theme="dark"] .summary-card { border-color: #34404a; background: #1b252c; box-shadow: none; }
+:root[data-theme="dark"] .feedback-row, :root[data-theme="dark"] .list-header { border-color: #34404a; }
+:root[data-theme="dark"] .success-banner { background: #173b28; color: #a8e6bd; }
+:root[data-theme="dark"] .status-pill { background: #49371f; color: #ffd997; }
 @media (max-width: 760px) {
   .split-layout { grid-template-columns: 1fr; }
   .intro-panel { min-height: 360px; padding: 58px 8vw; }
