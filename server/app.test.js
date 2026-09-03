@@ -28,6 +28,22 @@ describe("CivicVoice baseline API", () => {
     expect(response.body.user.role).toBe("citizen");
   });
 
+  it("persists password hashes while allowing the demo credentials to sign in", async () => {
+    const directory = await mkdtemp(path.join(os.tmpdir(), "civic-voice-"));
+    const db = await createDb(path.join(directory, "db.json"));
+
+    expect(db.data.users).toEqual(expect.arrayContaining([
+      expect.objectContaining({ passwordHash: expect.stringMatching(/^scrypt\$/) }),
+    ]));
+    expect(db.data.users.every((user) => !("password" in user))).toBe(true);
+
+    const app = await createApp({ db });
+    const response = await request(app).post("/api/login").send({
+      nric: "S0000002B", password: "admin123", role: "admin",
+    });
+    expect(response.status).toBe(200);
+  });
+
   it("accepts feedback", async () => {
     const app = await testApp();
     const response = await request(app).post("/api/feedback").send({
